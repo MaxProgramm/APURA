@@ -1,6 +1,6 @@
+import mathTools
 protokoll_name = "rawData.txt"
 splitter = " "
-import mathTools
 def timeToSecondConverter(date: str, time: str):
     years = mathTools.leading_zero_remover(date.split(".")[0])
     months = mathTools.leading_zero_remover(date.split(".")[1])
