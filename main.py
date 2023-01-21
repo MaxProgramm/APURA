@@ -1,6 +1,6 @@
 import mathTools
 protokoll_name = "rawData.txt"
-splitter = " x"
+splitter = " "
 
 # Converts the 2022.12.30 08:40:26 date/time format to seconds, to be able to easily do comparisons
 def timeToSecondConverter(date: str, time: str):
