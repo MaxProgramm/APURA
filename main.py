@@ -1,6 +1,6 @@
 import mathTools
 protokoll_name = "rawData.txt"
-splitter = " "
+splitter = " x"
 
 # Converts the 2022.12.30 08:40:26 date/time format to seconds, to be able to easily do comparisons
 def timeToSecondConverter(date: str, time: str):
@@ -60,7 +60,7 @@ class Case1:
             if self.running == False:
                 self.marked = line
                 self.running = True
-                print(f"{self.name} - marked - {line.rawLine}")
+                #print(f"{self.name} - marked - {line.rawLine}")
                 # print(line.rawLine)
             else:
                 pass
@@ -72,7 +72,7 @@ class Case1:
                     self.raise_alarm(self.marked, line)
                 else:
                     self.running = False
-                    print(f"{self.name} - Broke - {line.rawLine}")
+                    #print(f"{self.name} - Broke - {line.rawLine}")
 
 
 class Case2:
@@ -91,7 +91,7 @@ class Case2:
             if self.running == False:
                 self.marked = line
                 self.running = True
-                print(f"{self.name} - marked - {line.rawLine}")
+                #print(f"{self.name} - marked - {line.rawLine}")
                 # print(line.rawLine)
             else:
                 pass
@@ -103,7 +103,7 @@ class Case2:
                     self.raise_alarm(self.marked, line)
                 else:
                     self.running = False
-                    print(f"{self.name} - Broke - {line.rawLine}")
+                    #print(f"{self.name} - Broke - {line.rawLine}")
 
 
 # Opens protokoll and goes through lines
