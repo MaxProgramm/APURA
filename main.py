@@ -50,10 +50,11 @@ class Case1:
         self.waitTimeMinute = wait_time
         self.running = False
         self.max_temp1 = max_temp1
-        self.name = "TEMP ALARM"
+        self.name = "TEMPERATUR ALARM"
+        self.advice = "Schalte doch mal die Heizung ab, wenn du nicht im Raum bist."
 
     def raise_alarm(self, marked: ProtokollLine, end: ProtokollLine):
-        print(f"{self.name} | {marked.time} -> {end.time} | Time -seconds-: {end.absoluteTime - marked.absoluteTime} | Time -minutes-: {(end.absoluteTime - marked.absoluteTime) / 60}")
+        print(f"{self.name} | {marked.date} {marked.time} -> {end.date} {end.time} | Time -minutes-: {((end.absoluteTime - marked.absoluteTime) / 60).__int__()} | {self.advice}")
 
     def check(self, line: ProtokollLine):
         if line.pInRoom == False and line.temp1 > self.max_temp1:
@@ -81,10 +82,11 @@ class Case2:
     def __init__(self, wait_time: int = 30):
         self.waitTimeMinute = wait_time
         self.running = False
-        self.name = "PC ALARM"
+        self.name = "STECKDOSEN ALARM"
+        self.advice = "Schalte doch mal das Gerät ab, das an der Steckdose hängt, wenn du aus dem Zimmer gehst."
 
     def raise_alarm(self, marked: ProtokollLine, end: ProtokollLine):
-        print(f"{self.name} | {marked.time} -> {end.time} | Time -seconds-: {end.absoluteTime - marked.absoluteTime} | Time -minutes-: {(end.absoluteTime - marked.absoluteTime) / 60}")
+        print(f"{self.name} | {marked.date} {marked.time} -> {end.date} {end.time} | Time -minutes-: {((end.absoluteTime - marked.absoluteTime) / 60).__int__()} | {self.advice}")
 
     def check(self, line: ProtokollLine):
         if line.pInRoom == False and line.power > 0.1:
@@ -101,6 +103,7 @@ class Case2:
                     # print(line.rawLine)
                     self.running = False
                     self.raise_alarm(self.marked, line)
+
                 else:
                     self.running = False
                     #print(f"{self.name} - Broke - {line.rawLine}")
