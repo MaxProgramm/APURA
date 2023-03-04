@@ -15,8 +15,8 @@ while True:
     #    file.write(f"{counter}")
     #    print(counter)
 
-    data = f"2022.12.30 08:33:28 TEMPERATUR2 off 0 19.4 19.7"
+    data = f"2022.12.30 08:33:28 TEMPERATUR2 off 2.5 19.4 19.7"
     response = requests.post(f"http://{ip}:5000/message", data=data)
     print(response.text)
 
-    time.sleep(1)
+    time.sleep(30)

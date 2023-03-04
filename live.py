@@ -55,11 +55,19 @@ class Case1:
         self.max_temp1 = max_temp1
         self.name = "TEMPERATUR ALARM"
         self.advice = "Schalte doch mal die Heizung ab, wenn du nicht im Raum bist."
+        self.alarm_was_raised = False
+
+    def send_mail(self):
+        print("SEND MAIL!")
+        pass
 
     def raise_alarm(self, marked: ProtokollLine, end: ProtokollLine):
         print(f"{self.name} | {marked.date} {marked.time} -> {end.date} {end.time} | Time -minutes-: {((end.absoluteTime - marked.absoluteTime) / 60).__int__()} | {self.advice}")
 
     def raise_live_alarm(self, diff):
+        if not self.alarm_was_raised:
+            self.send_mail()
+            self.alarm_was_raised = True
         print(f"{self.name} | {diff}s")
 
     def live_check(self):
@@ -75,6 +83,7 @@ class Case1:
             if diff > self.waitTimeMinute * 60:
                 self.raise_live_alarm(diff)
                 return [True, f"{self.name} | {diff}s"]
+        self.alarm_was_raised = False
         return [False, ""]
 
     def check(self, line: ProtokollLine):
@@ -101,15 +110,23 @@ class Case2:
     # Checks if no one is in the room and the value of the Steckdose is over 0.0 power units for the given amount of
     # minutes
     def __init__(self, wait_time: int = 30):
+        self.alarm_was_raised = False
         self.waitTimeMinute = wait_time
         self.running = False
         self.name = "STECKDOSEN ALARM"
         self.advice = "Schalte doch mal das Gerät ab, das an der Steckdose hängt, wenn du aus dem Zimmer gehst."
 
+    def send_mail(self):
+        print("SEND MAIL!")
+        pass
+
     def raise_alarm(self, marked: ProtokollLine, end: ProtokollLine):
         print(f"{self.name} | {marked.date} {marked.time} -> {end.date} {end.time} | Time -minutes-: {((end.absoluteTime - marked.absoluteTime) / 60).__int__()} | {self.advice}")
 
     def raise_live_alarm(self, diff):
+        if not self.alarm_was_raised:
+            self.send_mail()
+            self.alarm_was_raised = True
         print(f"{self.name} | {diff}s")
 
     def live_check(self):
@@ -125,6 +142,7 @@ class Case2:
             if diff > self.waitTimeMinute * 60:
                 self.raise_live_alarm(diff)
                 return [True, f"{self.name} | {diff}s | "]
+        self.alarm_was_raised = False
         return [False, ""]
 
     def check(self, line: ProtokollLine):
