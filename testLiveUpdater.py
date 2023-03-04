@@ -8,7 +8,7 @@ with open("config.json") as config_file:
 
 ip = json_data["server_ip"]
 
-#counter = 0
+counter = 0
 while True:
     #counter = counter + 1
     #with open("tempData.txt", "w") as file:
