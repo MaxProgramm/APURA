@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Live Updating Page</title>
+    <script src="http://{{ server_address }}:5000/files/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <div id="data"></div>
+    <script>
+        function getData() {
+            $.ajax({
+                url: '/data',
+                type: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    $('#data').text(data.message);
+                },
+                error: function() {
+                    console.log('Error getting data.');
+                }
+            });
+        }
+        // Update data every 5 seconds
+        setInterval(getData, 1000);
+    </script>
+</body>
+</html>
