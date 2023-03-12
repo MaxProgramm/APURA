@@ -44,17 +44,13 @@ class ProtokollLine:
         self.time = datetime.now().strftime("%Y.%m.%d %H:%M:%S").split(" ")[1]
         self.absoluteTime = timeToSecondConverter(self.date, self.time)
 
-
-# Here are the cases, which will get checked.
-class Case1:
-    # checks if room temperature is above a specific value(19) while no one is in the room for a given amount of
-    # minutes (standard 30 minutes)
-    def __init__(self, wait_time: int = 30, max_temp1: int = 19):
+class case:
+    def __init__(self, wait_time: int, name: str, advice: str):
         self.waitTimeMinute = wait_time
         self.running = False
-        self.max_temp1 = max_temp1
-        self.name = "TEMPERATUR ALARM"
-        self.advice = "Schalte doch mal die Heizung ab, wenn du nicht im Raum bist."
+        # self.max_temp1 = max_temp1
+        self.name = name
+        self.advice = advice
         self.alarm_was_raised = False
 
     def send_mail(self):
@@ -106,44 +102,39 @@ class Case1:
                     # print(f"{self.name} - Broke - {line.rawLine}")
 
 
-class Case2:
-    # Checks if no one is in the room and the value of the Steckdose is over 0.0 power units for the given amount of
-    # minutes
-    def __init__(self, wait_time: int = 30):
-        self.alarm_was_raised = False
-        self.waitTimeMinute = wait_time
-        self.running = False
-        self.name = "STECKDOSEN ALARM"
-        self.advice = "Schalte doch mal das Gerät ab, das an der Steckdose hängt, wenn du aus dem Zimmer gehst."
+# Here are the cases, which will get checked.
 
-    def send_mail(self):
-        print("SEND MAIL!")
-        pass
 
-    def raise_alarm(self, marked: ProtokollLine, end: ProtokollLine):
-        print(f"{self.name} | {marked.date} {marked.time} -> {end.date} {end.time} | Time -minutes-: {((end.absoluteTime - marked.absoluteTime) / 60).__int__()} | {self.advice}")
 
-    def raise_live_alarm(self, diff):
-        if not self.alarm_was_raised:
-            self.send_mail()
-            self.alarm_was_raised = True
-        print(f"{self.name} | {diff}s")
+class Case1(case):
+    def __init__(self, wait_time: int = 30, max_temp1: int = 19):
+        super().__init__(wait_time, "TEMPERATUR ALARM", "Schalte doch mal die Heizung ab, wenn du nicht im Raum bist.")
+        self.max_temp1 = max_temp1
 
-    def live_check(self):
-        if self.running:
-            date = datetime.now().strftime("%Y.%m.%d %H:%M:%S").split(" ")[0]
-            time = datetime.now().strftime("%Y.%m.%d %H:%M:%S").split(" ")[1]
+    def check(self, line: ProtokollLine):
+        if line.pInRoom == False and line.temp1 > self.max_temp1:
+            if self.running == False:
+                self.marked = line
+                self.running = True
+                # print(f"{self.name} - marked - {line.rawLine}")
+                # print(line.rawLine)
+            else:
+                pass
+        else:
+            if self.running:
+                if line.absoluteTime - self.marked.absoluteTime > (self.waitTimeMinute * 60):
+                    # print(line.rawLine)
+                    self.running = False
+                    self.raise_alarm(self.marked, line)
+                else:
+                    self.running = False
+                    # print(f"{self.name} - Broke - {line.rawLine}")
 
-            print(date, time)
 
-            current_absolute_time = timeToSecondConverter(date, time)
-            diff = current_absolute_time - self.marked.absoluteTime
+class Case2(case):
 
-            if diff > self.waitTimeMinute * 60:
-                self.raise_live_alarm(diff)
-                return [True, f"{self.name} | {diff}s | "]
-        self.alarm_was_raised = False
-        return [False, ""]
+    def __init__(self, wait_time:int = 30):
+        super().__init__(wait_time, "STECKDOSEN ALARM", "Schalte doch mal das Gerät ab, das an der Steckdose hängt, wenn du aus dem Zimmer gehst.")
 
     def check(self, line: ProtokollLine):
         if line.pInRoom == False and line.power > 0.1:
@@ -163,7 +154,8 @@ class Case2:
 
                 else:
                     self.running = False
-                    #print(f"{self.name} - Broke - {line.rawLine}")
+                    # print(f"{self.name} - Broke - {line.rawLine}")
+
 
 
 # Opens protokoll and goes through lines

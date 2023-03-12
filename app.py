@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, jsonify, send_file
 import subprocess
-from live import ProtokollLine, Case2
+from live import ProtokollLine, Case2, Case1
 import json
 from datetime import datetime
 pythonScript = "main.py"
@@ -15,7 +15,7 @@ with open("config.json") as config_file:
 ip = json_data["server_ip"]
 
 # c1 = Case1(1)
-c2 = Case2(1)
+c2 = Case1(1)
 
 
 
